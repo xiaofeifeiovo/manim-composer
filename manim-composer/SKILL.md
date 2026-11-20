@@ -1,10 +1,11 @@
 ---
 name: manim-composer
-description: |
-  Plan educational or math/science explainer videos, including Manim and 3b1b-style requests. Prioritize clear explanations through motivated topic modules, consistent notation and traceable visual reasoning. Produce a complete sentence-level audiovisual script (scenes.md and video_script.json), separating animation, screen text, silent notes and exact narration. Use before writing animation code; for narrated production, generate audio and sentence timestamps before implementing timed animation. Use the appropriate ManimCE or ManimGL skill for implementation.
+description: Plan educational videos and math or science explainers, including Manim and 3Blue1Brown-style animations. Turn source material into a storyboard and a sentence-level audiovisual script with exact narration, screen text, silent notes, and animation cues.
 ---
 
 # Compose an audiovisual script
+
+Resolve template and reference paths from the directory containing this file. Write `scenes.md` and `video_script.json` in the video project. Planning needs only the source material and this skill's resources.
 
 ## Teaching priority
 
@@ -51,7 +52,7 @@ Check that the audio cue IDs and narration match the full script. Every cue need
 
 ### 4. Build the animation against the audio timeline
 
-Use the appropriate Manim implementation skill. Treat the master audio and sentence timestamps as the production clock. Plan reveals and transformations inside each sentence's measured window; subtitles and silent notes follow the same script IDs. Do not render long estimated scenes first and fit narration afterward.
+Choose `manimce-best-practices` for projects importing `manim`, or `manimgl-best-practices` for projects importing `manimlib`. For these skills and `qwen-video-narration`, use the client's skill catalog or read the named skill's `SKILL.md` from the supplied collection. Treat the master audio and sentence timestamps as the production clock. Plan reveals and transformations inside each sentence's measured window; subtitles and silent notes follow the same script IDs. Do not render long estimated scenes first and fit narration afterward.
 
 Simplify incidental animation that overruns its window while preserving essential reasoning and object handoffs. If understanding needs more explanation or observation time, add or revise sentences and explicit pauses in the script, rebuild the audio timeline, then rerender affected animation. Do not silently move later speech, crop words or insert unplanned chapter holds. Audio locked to an existing finished video is a separate dubbing mode, not this creation workflow.
 

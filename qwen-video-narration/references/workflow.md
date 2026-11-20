@@ -1,6 +1,8 @@
 # 从视听脚本到声音，再到动画
 
-依赖 Python 3.10+、ffmpeg、ffprobe；以下示例均在本地运行，只有 `synthesize` 会调用配音服务。脚本不自动安装依赖或配置密钥。示例绝对路径需替换成实际路径，所有试听、缓存、时间轴、检查文件与未交付的音轨统一放入项目 `tmp/`。
+在视频项目根目录运行以下命令。示例中的 `QWEN_SKILL_DIR` 是一个 shell 变量，由使用者设为本技能 `SKILL.md` 所在的实际目录。例如，若技能在当前项目的 `.agents/skills/` 下，先运行 `QWEN_SKILL_DIR=".agents/skills/qwen-video-narration"`。通过其他方式安装时，换成对应目录。直接调用进程的客户端可把脚本路径作为一个参数交给 Python。
+
+使用 Python 3.10+。处理音视频时需要 ffmpeg 和 ffprobe，只有 `synthesize` 会请求配音服务。所有试听、缓存、时间轴、检查文件与未交付的音轨放入项目 `tmp/`。
 
 ## 1. 完整视听脚本
 
@@ -47,10 +49,10 @@
 
 可配置 `endpoint`；本工具使用已核实的 Qwen-Audio-TTS HTTP 端点，不用于不同端点的 Qwen3-TTS。生成参数位于 `input`，`text`、`voice`、`format`、`sample_rate` 由脚本设定，请求 24 kHz WAV；最终标准化为 48 kHz 单声道，不做本地变调或变速。密钥只通过环境配置。
 
-```text
-python /absolute/skill/scripts/qwen_tts.py plan --script /project/video_script.json --config /project/tmp/config.json
-python /absolute/skill/scripts/qwen_tts.py synthesize --script /project/video_script.json --config /project/tmp/config.json --work-dir /project/tmp/voice --ids s01_001
-python /absolute/skill/scripts/qwen_tts.py synthesize --script /project/video_script.json --config /project/tmp/config.json --work-dir /project/tmp/voice
+```sh
+python3 "$QWEN_SKILL_DIR/scripts/qwen_tts.py" plan --script video_script.json --config tmp/config.json
+python3 "$QWEN_SKILL_DIR/scripts/qwen_tts.py" synthesize --script video_script.json --config tmp/config.json --work-dir tmp/voice --ids s01_001
+python3 "$QWEN_SKILL_DIR/scripts/qwen_tts.py" synthesize --script video_script.json --config tmp/config.json --work-dir tmp/voice
 ```
 
 `plan` 不联网。完整生成复用试听缓存。`cues.json` 每句含 `id`、`scene_id`、朗读文本、字幕、音频路径、实测 `speech`、含停顿的 `duration`、音轨 `start`、语音 `end`、`window_end`、请求摘要与用量。`start/end` 不是字数估计，`duration` 按帧率向上取整。只选部分 ID 得到的是试听子集，不能作为全片动画时间轴。
@@ -59,8 +61,8 @@ python /absolute/skill/scripts/qwen_tts.py synthesize --script /project/video_sc
 
 ## 3. 在动画前生成完整音轨与固定时间轴
 
-```text
-python /absolute/skill/scripts/build_audio_timeline.py --cues /project/tmp/voice/cues.json --script /project/video_script.json --output-dir /project/tmp/audio-master --fps 30
+```sh
+python3 "$QWEN_SKILL_DIR/scripts/build_audio_timeline.py" --cues tmp/voice/cues.json --script video_script.json --output-dir tmp/audio-master --fps 30
 ```
 
 工具核对完整脚本的全部句子 ID、顺序与旁白，重新读取各 WAV 的实际样本数，流式放置声音和显式停顿。拒绝试听子集、缺句、旧文本、时间漂移、截断或错误音频格式，不从字数估计时间。
@@ -104,8 +106,8 @@ for cue in timeline["cues"]:
 
 ## 5. 复用 master 合成成片
 
-```text
-python /absolute/skill/scripts/assemble_narration.py --timeline /project/tmp/audio-master/audio_timeline.json --render-timeline /project/tmp/render_timeline.json --video /project/tmp/visuals.mp4 --work-dir /project/tmp/export --output-prefix /project/deliverables/narrated
+```sh
+python3 "$QWEN_SKILL_DIR/scripts/assemble_narration.py" --timeline tmp/audio-master/audio_timeline.json --render-timeline tmp/render_timeline.json --video tmp/visuals.mp4 --work-dir tmp/export --output-prefix deliverables/narrated
 ```
 
 工具核对实际画面句子起点与固定音轨，超过一帧则停止；不拿渲染时刻改写固定旁白时间。主视频总长也须与声音时间轴相符。输出 MP4、MP3、逐句 SRT，默认拒绝覆盖；已有明确替换授权时可用 `--overwrite`。合成替换原音轨，若需背景声另行混音。

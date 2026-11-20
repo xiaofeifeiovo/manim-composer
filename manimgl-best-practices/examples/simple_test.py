@@ -1,7 +1,7 @@
 """
 Simple ManimGL test without LaTeX
 
-Run: PATH="/Library/TeX/texbin:$PATH" manimgl simple_test.py SimpleTest -w -l
+Run: manimgl simple_test.py SimpleTest -w -l
 """
 from manimlib import *
 import numpy as np

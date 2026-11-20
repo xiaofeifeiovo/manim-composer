@@ -1,12 +1,10 @@
 ---
 name: manimgl-best-practices
-description: |
-  Trigger when: (1) User mentions "manimgl" or "ManimGL" or "3b1b manim", (2) Code contains `from manimlib import *`, (3) User runs `manimgl` CLI commands, (4) Working with InteractiveScene, self.frame, self.embed(), ShowCreation(), or ManimGL-specific patterns.
-
-  Best practices for ManimGL (Grant Sanderson's 3Blue1Brown version) - OpenGL-based animation engine with interactive development. Covers InteractiveScene, Tex with t2c, camera frame control, interactive mode (-se flag), 3D rendering, and checkpoint_paste() workflow.
-
-  NOT for Manim Community Edition (which uses `manim` imports and `manim` CLI).
+description: Build and render animations with ManimGL, the OpenGL engine used by 3Blue1Brown. Use for scenes importing manimlib, the manimgl CLI, InteractiveScene, ShowCreation, camera frames, and interactive development.
+license: CC BY-NC-SA 4.0 (see LICENSE.txt)
 ---
+
+# ManimGL
 
 ## How to use
 
@@ -46,13 +44,11 @@ Read individual rule files for detailed explanations and code examples:
 
 ## Working Examples
 
-Complete, tested example files demonstrating common patterns:
-
-- [examples/basic_animations.py](examples/basic_animations.py) - Basic shapes, text, and animations
-- [examples/math_visualization.py](examples/math_visualization.py) - LaTeX equations and mathematical content
-- [examples/graph_plotting.py](examples/graph_plotting.py) - Axes, functions, and graphing
-- [examples/3d_visualization.py](examples/3d_visualization.py) - 3D scenes with camera control and surfaces
-- [examples/updater_patterns.py](examples/updater_patterns.py) - Dynamic animations with updaters
+- [Basic shapes and text](examples/simple_test.py)
+- [Step-by-step equation transforms](examples/equation_transforms.py)
+- [Graphing a regression line](examples/linear_regression.py)
+- [Camera motion in a 3D starfield](examples/parallax_starfield.py)
+- [Spring motion with live updaters](examples/spring_mass_system.py)
 
 ## Scene Templates
 

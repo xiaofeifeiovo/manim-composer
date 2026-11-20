@@ -1,4 +1,0 @@
-interface:
-  display_name: "Qwen 视频配音"
-  short_description: "用 Qwen 生成自然中文配音，验证音色调整并同步字幕与视频"
-  default_prompt: "使用 $qwen-video-narration，为这个视频生成中文配音，先给出短试听，再同步字幕和成片。"
